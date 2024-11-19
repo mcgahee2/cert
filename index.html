@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certificate Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    canvas {
+      border: 1px solid #ccc;
+    }
+    #certificate-container {
+      margin: 20px auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Certificate Generator</h1>
+  <p>Enter your name to generate your certificate:</p>
+  <form id="certificate-form">
+    <input type="text" id="name" placeholder="Your Name" required>
+    <button type="button" id="generate-button">Generate Certificate</button>
+  </form>
+  <div id="certificate-container">
+    <canvas id="certificate" width="800" height="600"></canvas>
+  </div>
+  <button id="download-button" style="display:none;">Download Certificate</button>
+  <script>
+    // Get references to DOM elements
+    const canvas = document.getElementById('certificate');
+    const ctx = canvas.getContext('2d');
+    const downloadButton = document.getElementById('download-button');
+
+    // Certificate background image
+    const certificateBackground = new Image();
+    certificateBackground.src = 'certificate-background.jpg'; // Your image path
+
+    // Draw certificate background when loaded
+    certificateBackground.onload = () => {
+      ctx.drawImage(certificateBackground, 0, 0, canvas.width, canvas.height);
+    };
+
+    // Generate certificate
+    document.getElementById('generate-button').addEventListener('click', () => {
+      const name = document.getElementById('name').value.trim();
+      if (!name) {
+        alert('Please enter a name.');
+        return;
+      }
+
+      // Redraw background
+      ctx.drawImage(certificateBackground, 0, 0, canvas.width, canvas.height);
+
+      // Add text
+      ctx.font = 'bold 40px Arial';
+      ctx.fillStyle = '#000';
+      ctx.textAlign = 'center';
+      ctx.fillText(name, canvas.width / 2, 400); // Adjust as needed
+
+      // Show download button
+      downloadButton.style.display = 'inline-block';
+    });
+
+    // Download certificate
+    downloadButton.addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.download = 'certificate.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+  </script>
+</body>
+</html>
